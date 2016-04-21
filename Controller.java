@@ -57,10 +57,6 @@ public class Controller implements Runnable {
     private void plOut(String info) {
         System.out.println(info);
     }
-
-    private void updateGamespace(String[] msgArry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     @Override
     public void run() {
