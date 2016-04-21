@@ -3,23 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package classisgames;
+package datagram;
 
 import java.awt.event.KeyEvent;
-import javafx.scene.input.KeyCode;
 
 /**
  *
- * @author Charles
+ * @author cedriver
  */
 public class CGGui extends javax.swing.JFrame {
     
-    private static Controller c;
+    private static Controller controller;
     /**
      * Creates new form CGGui
      */
     public CGGui() {
-        initComponents();
+        initComponents();        
     }
 
     /**
@@ -31,73 +30,67 @@ public class CGGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        chatPanel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        messageView = new javax.swing.JTextArea();
-        newMessageField = new javax.swing.JTextField();
+        msgViewTA = new javax.swing.JTextArea();
+        msgEnterTF = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Classic Games");
-        setName("cgFrame"); // NOI18N
 
-        messageView.setEditable(false);
-        messageView.setColumns(20);
-        messageView.setRows(5);
-        jScrollPane1.setViewportView(messageView);
+        msgViewTA.setColumns(20);
+        msgViewTA.setRows(5);
+        jScrollPane1.setViewportView(msgViewTA);
 
-        newMessageField.setText("jTextField1");
-        newMessageField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                sendMessage(evt);
+        msgEnterTF.setText("jTextField1");
+        msgEnterTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                msgEnterTFKeyPressed(evt);
             }
         });
 
-        javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
-        chatPanel.setLayout(chatPanelLayout);
-        chatPanelLayout.setHorizontalGroup(
-            chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chatPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(newMessageField)
-                    .addComponent(jScrollPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(msgEnterTF))
                 .addContainerGap())
         );
-        chatPanelLayout.setVerticalGroup(
-            chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chatPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(newMessageField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                .addContainerGap())
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(msgEnterTF, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(418, Short.MAX_VALUE)
-                .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sendMessage(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sendMessage
-        if(KeyEvent.VK_ENTER == evt.getKeyCode()){
-            c._outMsgs.add(newMessageField.getText());
+    private void msgEnterTFKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_msgEnterTFKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            controller.sendMessage(msgEnterTF.getText());
+            msgEnterTF.setText("");
         }
-    }//GEN-LAST:event_sendMessage
+    }//GEN-LAST:event_msgEnterTFKeyPressed
 
     /**
      * @param args the command line arguments
@@ -129,17 +122,19 @@ public class CGGui extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               CGGui gui =  new CGGui();
+                CGGui gui = new CGGui();
                 gui.setVisible(true);
-                c = new Controller(gui);
+                controller = new Controller(gui);
+                controller.start();
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel chatPanel;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JTextArea messageView;
-    public javax.swing.JTextField newMessageField;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField msgEnterTF;
+    protected javax.swing.JTextArea msgViewTA;
     // End of variables declaration//GEN-END:variables
 }
