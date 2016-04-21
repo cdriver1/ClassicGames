@@ -30,9 +30,38 @@ public class Controller implements Runnable {
     }
 
     public void processMessage(String msg) {
-        _gui.msgViewTA.append("\n" + msg);
+        String[] msgArry = msg.split(":");
+        switch(msgArry[0]){
+            case "message":
+                _gui.msgViewTA.append("\n" + msg);
+                break;
+            case "game": 
+                updateHangman(msgArry);
+                break;
+            case "tic":
+                upDateTic(msgArry);
+                break;
+            default:
+                _gui.msgViewTA.append("\nUnknown Message Type");
+                break;
+        }
+        
     }
 
+    
+
+    public void sendMessage(String text) {
+        outMsgs.add(text);
+    }
+
+    private void plOut(String info) {
+        System.out.println(info);
+    }
+
+    private void updateGamespace(String[] msgArry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     @Override
     public void run() {
         byte[] inBytes = new byte[256];
@@ -79,11 +108,11 @@ public class Controller implements Runnable {
         }
     }
 
-    public void sendMessage(String text) {
-        outMsgs.add(text);
+    private void updateHangman(String[] msgArry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void plOut(String info) {
-        System.out.println(info);
+    private void upDateTic(String[] msgArry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
