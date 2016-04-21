@@ -125,7 +125,8 @@ public class CGGui extends javax.swing.JFrame {
                 CGGui gui = new CGGui();
                 gui.setVisible(true);
                 controller = new Controller(gui);
-                controller.start();
+                Thread c = new Thread(controller);
+                c.start();
             }
         });
     }
