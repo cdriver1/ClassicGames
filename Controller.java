@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package datagram;
+package classisgames;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,10 +11,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,18 +26,45 @@ public class Controller implements Runnable {
 
     private CGGui _gui;
     private ArrayList<String> outMsgs = new ArrayList<String>();
+    private ArrayList<Player> players = new ArrayList<>();
+    private Player cPlayer;
 
-    public Controller(CGGui gui) {
+    public Controller(CGGui gui) throws UnknownHostException {
         _gui = gui;
+        players.add(new Player("Myself", InetAddress.getByName("127.0.0.1"), 3500));
+        cPlayer = players.get(0);
+    }
+
+    public void addOpponent(String name, String inetAddress, String port, int result) {
+        InetAddress ip;
+        try {
+            ip = InetAddress.getByName(inetAddress);
+            int p = Integer.parseInt(port);
+            players.add(new Player(name, ip, p));
+            if(result == JOptionPane.YES_OPTION)
+                cPlayer = players.get(players.size()-1);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void choosePlayer(String name) {
+        for (Player p : players) {
+            if (p.getName() == name) {
+                cPlayer = p;
+                break;
+            }
+        }
     }
 
     public void processMessage(String msg) {
         String[] msgArry = msg.split(":");
-        switch(msgArry[0]){
+        switch (msgArry[0]) {
             case "message":
                 _gui.msgViewTA.append("\n" + msg);
                 break;
-            case "game": 
+            case "game":
                 updateHangman(msgArry);
                 break;
             case "tic":
@@ -45,10 +74,8 @@ public class Controller implements Runnable {
                 _gui.msgViewTA.append("\nUnknown Message Type");
                 break;
         }
-        
-    }
 
-    
+    }
 
     public void sendMessage(String text) {
         outMsgs.add(text);
@@ -57,7 +84,7 @@ public class Controller implements Runnable {
     private void plOut(String info) {
         System.out.println(info);
     }
-    
+
     @Override
     public void run() {
         byte[] inBytes = new byte[256];
@@ -82,7 +109,7 @@ public class Controller implements Runnable {
                 if (sent < outMsgs.size()) {
                     String msg = outMsgs.get(outMsgs.size() - 1);
                     byte[] outBytes = msg.getBytes(StandardCharsets.UTF_8);
-                    DatagramPacket dp = new DatagramPacket(outBytes, outBytes.length, InetAddress.getByName("127.0.0.1"), 3500);
+                    DatagramPacket dp = new DatagramPacket(outBytes, outBytes.length, cPlayer.getInetAddress(), cPlayer.getPort());
                     ds.send(dp);
                     plOut("Sent '" + msg + "'");
                     sent++;
@@ -93,7 +120,7 @@ public class Controller implements Runnable {
 //                }
 //                outMsgs.add(count + " message/s have been sent");
 //                count++;
-                Thread.sleep(1500);
+                Thread.sleep(250);
             }
         } catch (SocketException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
